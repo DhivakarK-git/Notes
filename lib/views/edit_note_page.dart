@@ -15,9 +15,11 @@ class EditNotePage extends StatelessWidget {
 
     return WillPopScope(
       onWillPop: () async {
-        if (_title.text != note.title || _body.text != note.body)
+        if (_title.text != note.title || _body.text != note.body) {
           await Note(_title.text, _body.text, note.created).editCard(index);
-        close.call();
+          close.call();
+        } else
+          Navigator.of(context).pop();
         return true;
       },
       child: Scaffold(
