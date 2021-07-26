@@ -27,10 +27,12 @@ class EditNotePage extends StatelessWidget {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () async {
-              if (_title.text != note.title || _body.text != note.body)
+              if (_title.text != note.title || _body.text != note.body) {
                 await Note(_title.text, _body.text, note.created)
                     .editCard(index);
-              close.call();
+                close.call();
+              } else
+                Navigator.of(context).pop();
             },
           ),
           toolbarHeight: 88,
