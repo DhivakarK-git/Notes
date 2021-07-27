@@ -15,18 +15,8 @@ class AddNotePage extends StatelessWidget {
       if (title.isNotEmpty || body.isNotEmpty) {
         await note.Note(title, body, DateTime.now()).addCard();
         close.call();
-      } else {
+      } else
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              duration: Duration(seconds: 3),
-              elevation: 2,
-              content: Text(
-                'Empty Note Discarded',
-                style: Theme.of(context).textTheme.bodyText1,
-              )),
-        );
-      }
     }
 
     return WillPopScope(
