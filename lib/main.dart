@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,8 +8,11 @@ import 'package:notes/constants.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:notes/views/NotesPage.dart';
+import 'package:notes/views/NotesSearchPage.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:notes/model/note.dart';
+
+import 'constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,23 +22,24 @@ void main() async {
     NoteAdapter(),
   );
   await Hive.openBox('darkModeBox');
-  runApp(MyApp());
+  runApp(NotesApp());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class NotesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<Box<dynamic>>(
         valueListenable: Hive.box('darkModeBox').listenable(),
         builder: (context, box, widget) {
-          bool darkMode = box.get('darkMode',
-              defaultValue: Theme.of(context).brightness == Brightness.dark);
-          bool gridview = box.get('gridview', defaultValue: true);
+          bool darkMode = box.get('darkMode', defaultValue: true);
           SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-            systemNavigationBarColor:
-                darkMode ? kMatte : kGlacier, // navigation bar color
-            statusBarColor: kMatte, // status bar color
+            systemNavigationBarColor: darkMode ? kMatte : kGlacier,
+            systemNavigationBarIconBrightness:
+                darkMode ? Brightness.light : Brightness.dark,
+            statusBarColor: darkMode ? kMatte : kGlacier,
+            statusBarBrightness: darkMode ? Brightness.dark : Brightness.light,
+            statusBarIconBrightness:
+                darkMode ? Brightness.light : Brightness.dark,
           ));
           return MaterialApp(
             title: 'Notes',
@@ -43,6 +50,10 @@ class MyApp extends StatelessWidget {
               scaffoldBackgroundColor: kGlacier,
               cardColor: kFrost,
               primaryIconTheme: IconThemeData(color: kMatte),
+              snackBarTheme: SnackBarThemeData(
+                backgroundColor: kFrost,
+                behavior: SnackBarBehavior.floating,
+              ),
               textTheme: TextTheme(
                 headline1: GoogleFonts.poppins(
                   fontSize: 93,
@@ -127,6 +138,10 @@ class MyApp extends StatelessWidget {
               visualDensity: VisualDensity.adaptivePlatformDensity,
               scaffoldBackgroundColor: kMatte,
               cardColor: kShadow,
+              snackBarTheme: SnackBarThemeData(
+                backgroundColor: kShadow,
+                behavior: SnackBarBehavior.floating,
+              ),
               textTheme: TextTheme(
                 headline1: GoogleFonts.poppins(
                     fontSize: 93,
@@ -179,7 +194,10 @@ class MyApp extends StatelessWidget {
               ),
             ),
             debugShowCheckedModeBanner: false,
-            home: NotesPage(darkMode, gridview, box),
+            home: NotesPage(
+              darkMode,
+              box,
+            ),
           );
         });
   }
