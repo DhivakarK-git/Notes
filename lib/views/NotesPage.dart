@@ -318,7 +318,9 @@ class _NotesPageState extends State<NotesPage> {
                                       new SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisSpacing: 4,
                                     mainAxisSpacing: 4,
-                                    crossAxisCount: 2,
+                                    crossAxisCount:
+                                        MediaQuery.of(context).size.width ~/
+                                            170,
                                   ),
                                   itemBuilder:
                                       (BuildContext context, int index) {

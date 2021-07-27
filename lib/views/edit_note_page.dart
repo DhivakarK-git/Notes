@@ -17,15 +17,6 @@ class EditNotePage extends StatelessWidget {
     Future<void> edit(context) async {
       if (_title.text != note.title || _body.text != note.body) {
         await Note(_title.text, _body.text, note.created).editCard(index);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              duration: Duration(seconds: 3),
-              elevation: 2,
-              content: Text(
-                'Changes Saved',
-                style: Theme.of(context).textTheme.bodyText1,
-              )),
-        );
         refresh.call();
       }
     }
