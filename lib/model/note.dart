@@ -15,7 +15,7 @@ class Note {
 
   Note(this.title, this.body, this.created);
 
-  void addCard() async {
+  Future<void> addCard() async {
     final noteBox = await Hive.openBox('notes');
     noteBox.add(this);
   }
