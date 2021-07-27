@@ -299,9 +299,15 @@ class _NotesSearchPageState extends State<NotesSearchPage> {
                                                         : kMatte),
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: MediaQuery.of(context)
-                                                    .size
-                                                    .width ~/
-                                                100,
+                                                            .size
+                                                            .width ~/
+                                                        100 >
+                                                    5
+                                                ? 5
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width ~/
+                                                    100,
                                           ),
                                           Text(
                                             months[note.created.month - 1] +
@@ -387,9 +393,15 @@ class _NotesSearchPageState extends State<NotesSearchPage> {
                                                     .copyWith(color: kMatte),
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: MediaQuery.of(context)
-                                                        .size
-                                                        .width ~/
-                                                    100,
+                                                                .size
+                                                                .width ~/
+                                                            100 >
+                                                        5
+                                                    ? 5
+                                                    : MediaQuery.of(context)
+                                                            .size
+                                                            .width ~/
+                                                        100,
                                               ),
                                               Text(
                                                 months[note.created.month - 1] +

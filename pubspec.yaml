@@ -1,5 +1,5 @@
 name: notes
-description: A new Flutter project.
+description: A minimal Notes App.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   animations: ^2.0.1
   cupertino_icons: ^1.0.2
+  desktop_window: ^0.4.0
   google_fonts: ^2.1.0
   hive: ^2.0.4
   hive_flutter: ^1.1.0
@@ -33,8 +34,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_native_splash: ^1.2.0
   build_runner: ^2.0.6
+  flutter_native_splash: ^1.2.0
   hive_generator: ^1.1.0
 
 # For information on the generic Dart part of this file, see the

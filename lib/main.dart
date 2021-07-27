@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +9,9 @@ import 'package:notes/constants.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:notes/views/NotesPage.dart';
-import 'package:notes/views/NotesSearchPage.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:notes/model/note.dart';
+import 'package:desktop_window/desktop_window.dart';
 
 import 'constants.dart';
 
@@ -26,12 +27,20 @@ void main() async {
 }
 
 class NotesApp extends StatelessWidget {
+  void setSize() async {
+    await DesktopWindow.setMinWindowSize(Size(500, 500));
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (Platform.isWindows) {
+      setSize();
+    }
     return ValueListenableBuilder<Box<dynamic>>(
         valueListenable: Hive.box('darkModeBox').listenable(),
         builder: (context, box, widget) {
           bool darkMode = box.get('darkMode', defaultValue: true);
+
           SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
             systemNavigationBarColor: darkMode ? kMatte : kGlacier,
             systemNavigationBarIconBrightness:
