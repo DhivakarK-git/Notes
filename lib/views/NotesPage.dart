@@ -438,8 +438,15 @@ class _NotesPageState extends State<NotesPage> {
                                                                   : kMatte),
                                                       overflow:
                                                           TextOverflow.ellipsis,
-                                                      maxLines:
-                                                          MediaQuery.of(context)
+                                                      maxLines: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width ~/
+                                                                  100 >
+                                                              5
+                                                          ? 5
+                                                          : MediaQuery.of(
+                                                                      context)
                                                                   .size
                                                                   .width ~/
                                                               100,
@@ -537,10 +544,17 @@ class _NotesPageState extends State<NotesPage> {
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                           maxLines: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width ~/
-                                                              100,
+                                                                              context)
+                                                                          .size
+                                                                          .width ~/
+                                                                      100 >
+                                                                  5
+                                                              ? 5
+                                                              : MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width ~/
+                                                                  100,
                                                         ),
                                                         Text(
                                                           months[note.created
@@ -762,10 +776,17 @@ class _NotesPageState extends State<NotesPage> {
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         maxLines: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width ~/
-                                                            100,
+                                                                            context)
+                                                                        .size
+                                                                        .width ~/
+                                                                    100 >
+                                                                5
+                                                            ? 5
+                                                            : MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width ~/
+                                                                100,
                                                       ),
                                                       Text(
                                                         months[note.created
@@ -883,11 +904,17 @@ class _NotesPageState extends State<NotesPage> {
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,
-                                                            maxLines: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width ~/
-                                                                100,
+                                                            maxLines: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width ~/
+                                                                        100 >
+                                                                    5
+                                                                ? 5
+                                                                : MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width ~/
+                                                                    100,
                                                           ),
                                                           Text(
                                                             months[note.created
