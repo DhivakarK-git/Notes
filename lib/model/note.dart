@@ -16,17 +16,17 @@ class Note {
   Note(this.title, this.body, this.created);
 
   Future<void> addCard() async {
-    final noteBox = await Hive.openBox('notes');
+    final noteBox = Hive.box('notes');
     noteBox.add(this);
   }
 
   Future<void> editCard(int index) async {
-    final noteBox = await Hive.openBox('notes');
+    final noteBox = Hive.box('notes');
     noteBox.putAt(index, this);
   }
 
   Future<void> removeCard(int index) async {
-    final noteBox = await Hive.openBox('notes');
+    final noteBox = Hive.box('notes');
     noteBox.deleteAt(index);
   }
 }

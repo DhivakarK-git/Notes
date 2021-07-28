@@ -24,7 +24,7 @@ class EditNotePage extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         close.call();
-        edit(context);
+        await edit(context);
         return false;
       },
       child: Scaffold(
@@ -37,6 +37,7 @@ class EditNotePage extends StatelessWidget {
               child: IconButton(
                 tooltip: 'Make a Copy',
                 onPressed: () async {
+                  close.call();
                   await Note(_title.text, _body.text, DateTime.now()).addCard();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -47,7 +48,6 @@ class EditNotePage extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodyText1,
                         )),
                   );
-                  Navigator.of(context).pop();
                   refresh.call();
                 },
                 icon: Icon(Icons.copy),
@@ -59,8 +59,7 @@ class EditNotePage extends StatelessWidget {
                 tooltip: 'Delete Note',
                 onPressed: () async {
                   close.call();
-                  await Note(_title.text, _body.text, DateTime.now())
-                      .removeCard(index);
+                  await Note("", "", DateTime.now()).removeCard(index);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         duration: Duration(seconds: 3),

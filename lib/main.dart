@@ -1,7 +1,4 @@
-import 'dart:async';
 import 'dart:io';
-
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,20 +36,31 @@ class NotesApp extends StatelessWidget {
     return ValueListenableBuilder<Box<dynamic>>(
         valueListenable: Hive.box('darkModeBox').listenable(),
         builder: (context, box, widget) {
-          bool darkMode = box.get('darkMode', defaultValue: true);
-
+          int darkMode =
+              box.get('darkMode', defaultValue: 2).runtimeType == bool
+                  ? 2
+                  : box.get('darkMode', defaultValue: 2);
+          var barColor = darkMode == 2
+              ? (WidgetsBinding.instance!.window.platformBrightness ==
+                      Brightness.dark
+                  ? kMatte
+                  : kGlacier)
+              : (darkMode == 1 ? kMatte : kGlacier);
+          var iconBrightness =
+              barColor == kMatte ? Brightness.light : Brightness.dark;
           SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-            systemNavigationBarColor: darkMode ? kMatte : kGlacier,
-            systemNavigationBarIconBrightness:
-                darkMode ? Brightness.light : Brightness.dark,
-            statusBarColor: darkMode ? kMatte : kGlacier,
-            statusBarBrightness: darkMode ? Brightness.dark : Brightness.light,
-            statusBarIconBrightness:
-                darkMode ? Brightness.light : Brightness.dark,
+            systemNavigationBarColor: barColor,
+            systemNavigationBarIconBrightness: iconBrightness,
+            statusBarColor: barColor,
+            statusBarBrightness:
+                barColor == kMatte ? Brightness.dark : Brightness.light,
+            statusBarIconBrightness: iconBrightness,
           ));
           return MaterialApp(
             title: 'Notes',
-            themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
+            themeMode: darkMode == 2
+                ? ThemeMode.system
+                : (darkMode == 1 ? ThemeMode.dark : ThemeMode.light),
             theme: ThemeData.light().copyWith(
               primaryColor: kGlacier,
               visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -203,10 +211,7 @@ class NotesApp extends StatelessWidget {
               ),
             ),
             debugShowCheckedModeBanner: false,
-            home: NotesPage(
-              darkMode,
-              box,
-            ),
+            home: NotesPage(darkMode, box),
           );
         });
   }
