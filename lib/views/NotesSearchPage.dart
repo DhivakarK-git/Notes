@@ -9,10 +9,9 @@ import 'package:notes/views/edit_note_page.dart';
 import 'package:animations/animations.dart';
 
 class NotesSearchPage extends StatefulWidget {
-  final bool darkMode;
   final Box<dynamic> box;
   final Function refresh;
-  NotesSearchPage(this.darkMode, this.box, this.refresh);
+  NotesSearchPage(this.box, this.refresh);
 
   @override
   _NotesSearchPageState createState() => _NotesSearchPageState();
@@ -302,8 +301,8 @@ class _NotesSearchPageState extends State<NotesSearchPage> {
                                                             .size
                                                             .width ~/
                                                         100 >
-                                                    5
-                                                ? 5
+                                                    3
+                                                ? 3
                                                 : MediaQuery.of(context)
                                                         .size
                                                         .width ~/
@@ -396,8 +395,8 @@ class _NotesSearchPageState extends State<NotesSearchPage> {
                                                                 .size
                                                                 .width ~/
                                                             100 >
-                                                        5
-                                                    ? 5
+                                                        3
+                                                    ? 3
                                                     : MediaQuery.of(context)
                                                             .size
                                                             .width ~/

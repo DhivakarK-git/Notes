@@ -10,7 +10,7 @@ import 'package:notes/views/edit_note_page.dart';
 import 'package:animations/animations.dart';
 
 class NotesPage extends StatefulWidget {
-  final bool darkMode;
+  final int darkMode;
   final Box<dynamic> box;
   NotesPage(this.darkMode, this.box);
   @override
@@ -22,8 +22,21 @@ class _NotesPageState extends State<NotesPage> {
   List<int> deleteValues = [];
   String copyTitle = '', copyBody = '';
   int count = 0;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.window.onPlatformBrightnessChanged = () {
+      if (widget.darkMode == 2) widget.box.put('darkMode', 2);
+    };
+  }
 
-  Future<void> deleteAll() async {
+  @override
+  void dispose() {
+    widget.box.compact();
+    super.dispose();
+  }
+
+  Future<void> deleteAll(Box<dynamic> box) async {
     deleteValues.sort();
     for (int index = deleteValues.length - 1; index >= 0; index--)
       await Note("", "", DateTime.now()).removeCard(deleteValues[index]);
@@ -49,7 +62,7 @@ class _NotesPageState extends State<NotesPage> {
         );
       },
       child: search
-          ? NotesSearchPage(widget.darkMode, widget.box, () {
+          ? NotesSearchPage(widget.box, () {
               setState(() {
                 search = false;
               });
@@ -105,7 +118,7 @@ class _NotesPageState extends State<NotesPage> {
                           padding: const EdgeInsets.only(right: 8.0),
                           child: IconButton(
                             onPressed: () async {
-                              await deleteAll();
+                              await deleteAll(widget.box);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                     duration: Duration(seconds: 3),
@@ -174,6 +187,13 @@ class _NotesPageState extends State<NotesPage> {
                             child: InkWell(
                               onTap: () {
                                 widget.box.put('gridview', !gridview);
+// if (widget.box.containsKey('gridview')) {
+//                                   widget.box.putAt(
+//                                       widget.box.keys
+//                                           .toList()
+//                                           .indexOf('gridview'),
+//                                       !gridview);
+//                                 }
                               },
                               child: SizedBox(
                                 width: 48,
@@ -199,22 +219,35 @@ class _NotesPageState extends State<NotesPage> {
                         Container(
                           color: Colors.transparent,
                           child: Center(
-                            child: InkWell(
-                              onTap: () {
-                                widget.box.put('darkMode', !widget.darkMode);
-                              },
-                              child: SizedBox(
-                                width: 48,
-                                height: 48,
-                                child: Card(
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Icon(
-                                    widget.darkMode
-                                        ? Icons.dark_mode_outlined
-                                        : Icons.light_mode_outlined,
+                            child: Tooltip(
+                              message: widget.darkMode == 2
+                                  ? 'System Default'
+                                  : (widget.darkMode == 1
+                                      ? 'Dark Mode'
+                                      : 'Light Mode'),
+                              child: InkWell(
+                                onTap: () {
+                                  widget.box.put(
+                                      'darkMode',
+                                      widget.darkMode == 1
+                                          ? 2
+                                          : (widget.darkMode == 2 ? 0 : 1));
+                                },
+                                child: SizedBox(
+                                  width: 48,
+                                  height: 48,
+                                  child: Card(
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Icon(
+                                      widget.darkMode == 2
+                                          ? Icons.devices_outlined
+                                          : (widget.darkMode == 1
+                                              ? Icons.dark_mode_outlined
+                                              : Icons.light_mode_outlined),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -320,7 +353,7 @@ class _NotesPageState extends State<NotesPage> {
                                     mainAxisSpacing: 4,
                                     crossAxisCount:
                                         MediaQuery.of(context).size.width ~/
-                                            170,
+                                            175,
                                   ),
                                   itemBuilder:
                                       (BuildContext context, int index) {
@@ -443,8 +476,8 @@ class _NotesPageState extends State<NotesPage> {
                                                                       .size
                                                                       .width ~/
                                                                   100 >
-                                                              5
-                                                          ? 5
+                                                              3
+                                                          ? 3
                                                           : MediaQuery.of(
                                                                       context)
                                                                   .size
@@ -548,8 +581,8 @@ class _NotesPageState extends State<NotesPage> {
                                                                           .size
                                                                           .width ~/
                                                                       100 >
-                                                                  5
-                                                              ? 5
+                                                                  3
+                                                              ? 3
                                                               : MediaQuery.of(
                                                                           context)
                                                                       .size
@@ -780,8 +813,8 @@ class _NotesPageState extends State<NotesPage> {
                                                                         .size
                                                                         .width ~/
                                                                     100 >
-                                                                5
-                                                            ? 5
+                                                                3
+                                                            ? 3
                                                             : MediaQuery.of(
                                                                         context)
                                                                     .size
@@ -908,8 +941,8 @@ class _NotesPageState extends State<NotesPage> {
                                                                             .size
                                                                             .width ~/
                                                                         100 >
-                                                                    5
-                                                                ? 5
+                                                                    3
+                                                                ? 3
                                                                 : MediaQuery.of(
                                                                             context)
                                                                         .size
