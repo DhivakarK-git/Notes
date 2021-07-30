@@ -90,14 +90,15 @@ class NotesApp extends StatelessWidget {
                   color: kMatte,
                 ),
                 headline4: GoogleFonts.poppins(
-                  fontSize: 33,
+                  fontSize: 32,
                   fontWeight: FontWeight.w400,
                   letterSpacing: 0.25,
                   color: kMatte,
                 ),
                 headline5: GoogleFonts.poppins(
-                  fontSize: 23,
+                  fontSize: 24,
                   fontWeight: FontWeight.w400,
+                  letterSpacing: 0.25,
                   color: kMatte,
                 ),
                 headline6: GoogleFonts.poppins(
