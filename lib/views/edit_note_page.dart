@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,9 +34,6 @@ class EditNotePage extends StatelessWidget {
     ValueNotifier<TextEditingValue> currentTitle =
             ValueNotifier(TextEditingValue(text: note.title)),
         currentBody = ValueNotifier(TextEditingValue(text: note.body));
-
-    ValueNotifier<bool> canRedo = ValueNotifier(false),
-        canUndo = ValueNotifier(false);
 
     TextEditingValue lastStoredTitle = TextEditingValue(text: note.title),
         lastStoredBody = TextEditingValue(text: note.body);
@@ -102,8 +101,6 @@ class EditNotePage extends StatelessWidget {
                 changes.undo();
                 lastStoredTitle = currentTitle.value;
                 lastStoredBody = currentBody.value;
-                canUndo.value = changes.canUndo;
-                canRedo.value = changes.canRedo;
               },
             ),
             RedoIntent: CallbackAction<RedoIntent>(
@@ -111,8 +108,6 @@ class EditNotePage extends StatelessWidget {
                 changes.redo();
                 lastStoredTitle = currentTitle.value;
                 lastStoredBody = currentBody.value;
-                canUndo.value = changes.canUndo;
-                canRedo.value = changes.canRedo;
               },
             ),
           },
@@ -123,67 +118,52 @@ class EditNotePage extends StatelessWidget {
               actions: [
                 Row(
                   children: [
-                    ValueListenableBuilder<bool>(
-                        valueListenable: canUndo,
-                        builder: (context, bool undo, Widget) {
-                          return Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: IconButton(
-                              tooltip: 'Undo',
-                              onPressed: !undo
-                                  ? null
-                                  : () {
-                                      if (currentTitle.value !=
-                                          lastStoredTitle) {
-                                        var temp = currentTitle.value;
-                                        changes.add(
-                                          new Change<TextEditingValue>(
-                                            lastStoredTitle,
-                                            () => currentTitle.value = temp,
-                                            (val) => currentTitle.value = val,
-                                          ),
-                                        );
-                                      }
-                                      if (currentBody.value != lastStoredBody) {
-                                        var temp = currentBody.value;
-                                        changes.add(
-                                          new Change<TextEditingValue>(
-                                            lastStoredBody,
-                                            () => currentBody.value = temp,
-                                            (val) => currentBody.value = val,
-                                          ),
-                                        );
-                                      }
-                                      changes.undo();
-                                      lastStoredTitle = currentTitle.value;
-                                      lastStoredBody = currentBody.value;
-                                      canUndo.value = changes.canUndo;
-                                      canRedo.value = changes.canRedo;
-                                    },
-                              icon: Icon(Icons.undo),
-                            ),
-                          );
-                        }),
-                    ValueListenableBuilder<bool>(
-                        valueListenable: canRedo,
-                        builder: (context, bool redo, Widget) {
-                          return Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: IconButton(
-                              tooltip: 'Redo',
-                              onPressed: !redo
-                                  ? null
-                                  : () {
-                                      changes.redo();
-                                      lastStoredTitle = currentTitle.value;
-                                      lastStoredBody = currentBody.value;
-                                      canUndo.value = changes.canUndo;
-                                      canRedo.value = changes.canRedo;
-                                    },
-                              icon: Icon(Icons.redo),
-                            ),
-                          );
-                        }),
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: IconButton(
+                        tooltip:
+                            'Undo' + (Platform.isWindows ? " (Ctrl+Z)" : ""),
+                        onPressed: () {
+                          if (currentTitle.value != lastStoredTitle) {
+                            var temp = currentTitle.value;
+                            changes.add(
+                              new Change<TextEditingValue>(
+                                lastStoredTitle,
+                                () => currentTitle.value = temp,
+                                (val) => currentTitle.value = val,
+                              ),
+                            );
+                          }
+                          if (currentBody.value != lastStoredBody) {
+                            var temp = currentBody.value;
+                            changes.add(
+                              new Change<TextEditingValue>(
+                                lastStoredBody,
+                                () => currentBody.value = temp,
+                                (val) => currentBody.value = val,
+                              ),
+                            );
+                          }
+                          changes.undo();
+                          lastStoredTitle = currentTitle.value;
+                          lastStoredBody = currentBody.value;
+                        },
+                        icon: Icon(Icons.undo),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: IconButton(
+                        tooltip:
+                            'Redo' + (Platform.isWindows ? " (Ctrl+Y)" : ""),
+                        onPressed: () {
+                          changes.redo();
+                          lastStoredTitle = currentTitle.value;
+                          lastStoredBody = currentBody.value;
+                        },
+                        icon: Icon(Icons.redo),
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -337,8 +317,6 @@ class EditNotePage extends StatelessWidget {
                                         );
                                         lastStoredTitle = _title.value;
                                       }
-                                      canUndo.value = changes.canUndo;
-                                      canRedo.value = changes.canRedo;
                                     },
                                   );
                                 }),
@@ -442,8 +420,6 @@ class EditNotePage extends StatelessWidget {
                                     );
                                     lastStoredBody = _body.value;
                                   }
-                                  canUndo.value = changes.canUndo;
-                                  canRedo.value = changes.canRedo;
                                 },
                                 maxLines: null,
                               );
