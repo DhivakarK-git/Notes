@@ -221,23 +221,27 @@ class _NotesPageState extends State<NotesPage> {
                                 Container(
                                   color: Colors.transparent,
                                   child: Center(
-                                    child: InkWell(
-                                      onTap: () {
-                                        widget.box.put('gridview', !gridview);
-                                      },
-                                      child: SizedBox(
-                                        width: 48,
-                                        height: 48,
-                                        child: Card(
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                          child: Icon(
-                                            gridview
-                                                ? Icons.grid_view_outlined
-                                                : Icons.view_agenda_outlined,
+                                    child: Tooltip(
+                                      message:
+                                          !gridview ? "Grid View" : "List View",
+                                      child: InkWell(
+                                        onTap: () {
+                                          widget.box.put('gridview', !gridview);
+                                        },
+                                        child: SizedBox(
+                                          width: 48,
+                                          height: 48,
+                                          child: Card(
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: Icon(
+                                              !gridview
+                                                  ? Icons.grid_view_outlined
+                                                  : Icons.view_agenda_outlined,
+                                            ),
                                           ),
                                         ),
                                       ),
