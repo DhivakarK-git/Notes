@@ -111,7 +111,7 @@ class _NotesSearchPageState extends State<NotesSearchPage> {
                                       deleteValuesLength.value = 0;
                                       widget.refresh.call();
                                     },
-                                    icon: Icon(Icons.copy),
+                                    icon: Icon(Icons.file_copy),
                                   ),
                                 );
                               else

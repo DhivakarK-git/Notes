@@ -142,7 +142,7 @@ class _NotesPageState extends State<NotesPage> {
                                               deleteValues.clear();
                                               deleteValuesLength.value = 0;
                                             },
-                                            icon: Icon(Icons.copy),
+                                            icon: Icon(Icons.file_copy),
                                           ),
                                         );
                                       else
