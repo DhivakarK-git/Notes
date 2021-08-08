@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:notes/Helpers/undo_rules.dart';
 import 'package:notes/constants.dart';
 import 'dart:async';
 import 'package:notes/model/note.dart' as note;
@@ -209,44 +210,8 @@ class AddNotePage extends StatelessWidget {
                                   lastStoredBody = currentBody.value;
                                 }
                                 currentTitle.value = _title.value;
-                                String changedText = "";
-                                if (val.length > lastStoredTitle.text.length) {
-                                  for (int i = 0;
-                                      i < lastStoredTitle.text.length;
-                                      i++) {
-                                    if (val[i] != lastStoredTitle.text[i]) {
-                                      changedText += val[i];
-                                      if (i + 1 < lastStoredTitle.text.length) {
-                                        val = val.substring(0, i) +
-                                            val.substring(i + 1);
-                                      }
-                                    }
-                                  }
-                                  if (changedText.isEmpty) {
-                                    changedText = val
-                                        .substring(lastStoredTitle.text.length);
-                                  }
-                                  if (changedText.contains('.') ||
-                                      changedText.contains(',') ||
-                                      changedText.contains('!') ||
-                                      changedText.contains('?') ||
-                                      changedText.contains(':') ||
-                                      changedText.contains(';') ||
-                                      changedText.contains('\"') ||
-                                      changedText.contains('-') ||
-                                      changedText.contains('_') ||
-                                      changedText.contains(' ')) {
-                                    changes.add(
-                                      new Change<TextEditingValue>(
-                                        lastStoredTitle,
-                                        () => currentTitle.value = _title.value,
-                                        (val) => currentTitle.value = val,
-                                      ),
-                                    );
-                                    lastStoredTitle = _title.value;
-                                  }
-                                } else if (val.length <
-                                    lastStoredTitle.text.length) {
+                                if (UndoRules.shouldStore(lastStoredTitle.text,
+                                    currentTitle.value.text)) {
                                   changes.add(
                                     new Change<TextEditingValue>(
                                       lastStoredTitle,
@@ -301,44 +266,8 @@ class AddNotePage extends StatelessWidget {
                                   lastStoredTitle = currentTitle.value;
                                 }
                                 currentBody.value = _body.value;
-                                String changedText = "";
-                                if (val.length > lastStoredBody.text.length) {
-                                  for (int i = 0;
-                                      i < lastStoredBody.text.length;
-                                      i++) {
-                                    if (val[i] != lastStoredBody.text[i]) {
-                                      changedText += val[i];
-                                      if (i + 1 < lastStoredBody.text.length) {
-                                        val = val.substring(0, i) +
-                                            val.substring(i + 1);
-                                      }
-                                    }
-                                  }
-                                  if (changedText.isEmpty) {
-                                    changedText = val
-                                        .substring(lastStoredBody.text.length);
-                                  }
-                                  if (changedText.contains('.') ||
-                                      changedText.contains(',') ||
-                                      changedText.contains('!') ||
-                                      changedText.contains('?') ||
-                                      changedText.contains(':') ||
-                                      changedText.contains(';') ||
-                                      changedText.contains('\"') ||
-                                      changedText.contains('-') ||
-                                      changedText.contains('_') ||
-                                      changedText.contains(' ')) {
-                                    changes.add(
-                                      new Change<TextEditingValue>(
-                                        lastStoredBody,
-                                        () => currentBody.value = _body.value,
-                                        (val) => currentBody.value = val,
-                                      ),
-                                    );
-                                    lastStoredBody = _body.value;
-                                  }
-                                } else if (val.length <
-                                    lastStoredTitle.text.length) {
+                                if (UndoRules.shouldStore(lastStoredBody.text,
+                                    currentBody.value.text)) {
                                   changes.add(
                                     new Change<TextEditingValue>(
                                       lastStoredBody,

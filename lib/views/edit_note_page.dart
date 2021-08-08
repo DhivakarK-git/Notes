@@ -1,9 +1,7 @@
 import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:notes/Helpers/undo_rules.dart';
 import 'package:notes/constants.dart';
 import 'package:notes/model/note.dart';
 import 'dart:async';
@@ -29,7 +27,8 @@ class EditNotePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ChangeStack changes = new ChangeStack(limit: 15);
+    // does this need a limit?
+    ChangeStack changes = new ChangeStack();
 
     ValueNotifier<TextEditingValue> currentTitle =
             ValueNotifier(TextEditingValue(text: note.title)),
@@ -166,53 +165,110 @@ class EditNotePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(
-                  width: 24,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: IconButton(
-                    tooltip: 'Make a Copy',
-                    onPressed: () async {
-                      close.call();
-                      await Note(currentTitle.value.text,
-                              currentBody.value.text, DateTime.now())
-                          .addCard();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            duration: Duration(seconds: 3),
-                            elevation: 2,
-                            content: Text(
-                              'Note Duplicated',
-                              style: Theme.of(context).textTheme.bodyText1,
-                            )),
-                      );
-                      refresh.call();
-                    },
-                    icon: Icon(Icons.copy),
+                if (Platform.isWindows)
+                  SizedBox(
+                    width: 24,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                    tooltip: 'Delete Note',
-                    onPressed: () async {
-                      close.call();
-                      await Note("", "", DateTime.now()).removeCard(index);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            duration: Duration(seconds: 3),
-                            elevation: 2,
-                            content: Text(
-                              'Note Deleted',
-                              style: Theme.of(context).textTheme.bodyText1,
-                            )),
-                      );
-                      refresh.call();
-                    },
-                    icon: Icon(Icons.delete),
+                if (Platform.isWindows)
+                  Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: IconButton(
+                      tooltip: 'Make a Copy',
+                      onPressed: () async {
+                        close.call();
+                        await Note(currentTitle.value.text,
+                                currentBody.value.text, DateTime.now())
+                            .addCard();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              duration: Duration(seconds: 3),
+                              elevation: 2,
+                              content: Text(
+                                'Note Duplicated',
+                                style: Theme.of(context).textTheme.bodyText1,
+                              )),
+                        );
+                        refresh.call();
+                      },
+                      icon: Icon(Icons.file_copy),
+                    ),
                   ),
-                ),
+                if (Platform.isWindows)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IconButton(
+                      tooltip: 'Delete Note',
+                      onPressed: () async {
+                        close.call();
+                        await Note("", "", DateTime.now()).removeCard(index);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              duration: Duration(seconds: 3),
+                              elevation: 2,
+                              content: Text(
+                                'Note Deleted',
+                                style: Theme.of(context).textTheme.bodyText1,
+                              )),
+                        );
+                        refresh.call();
+                      },
+                      icon: Icon(Icons.delete),
+                    ),
+                  ),
+                if (Platform.isAndroid || Platform.isIOS)
+                  PopupMenuButton(
+                    icon: Icon(Icons.more_vert),
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                      PopupMenuItem(
+                        child: ListTile(
+                          leading: Icon(Icons.file_copy),
+                          title: Text('Make a Copy'),
+                          onTap: () async {
+                            close.call();
+                            close.call();
+                            await Note(currentTitle.value.text,
+                                    currentBody.value.text, DateTime.now())
+                                .addCard();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  duration: Duration(seconds: 3),
+                                  elevation: 2,
+                                  content: Text(
+                                    'Note Duplicated',
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  )),
+                            );
+                            refresh.call();
+                          },
+                        ),
+                      ),
+                      PopupMenuItem(
+                        height: 0,
+                        child: ListTile(
+                          leading: Icon(Icons.delete),
+                          title: Text('Delete Note'),
+                          onTap: () async {
+                            close.call();
+                            close.call();
+                            await Note("", "", DateTime.now())
+                                .removeCard(index);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  duration: Duration(seconds: 3),
+                                  elevation: 2,
+                                  content: Text(
+                                    'Note Deleted',
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  )),
+                            );
+                            refresh.call();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
               ],
             ),
             body: Container(
@@ -265,48 +321,9 @@ class EditNotePage extends StatelessWidget {
                                         lastStoredBody = currentBody.value;
                                       }
                                       currentTitle.value = _title.value;
-                                      String changedText = "";
-                                      if (val.length >
-                                          lastStoredTitle.text.length) {
-                                        for (int i = 0;
-                                            i < lastStoredTitle.text.length;
-                                            i++) {
-                                          if (val[i] !=
-                                              lastStoredTitle.text[i]) {
-                                            changedText += val[i];
-                                            if (i + 1 <
-                                                lastStoredTitle.text.length) {
-                                              val = val.substring(0, i) +
-                                                  val.substring(i + 1);
-                                            }
-                                          }
-                                        }
-                                        if (changedText.isEmpty) {
-                                          changedText = val.substring(
-                                              lastStoredTitle.text.length);
-                                        }
-                                        if (changedText.contains('.') ||
-                                            changedText.contains(',') ||
-                                            changedText.contains('!') ||
-                                            changedText.contains('?') ||
-                                            changedText.contains(':') ||
-                                            changedText.contains(';') ||
-                                            changedText.contains('\"') ||
-                                            changedText.contains('-') ||
-                                            changedText.contains('_') ||
-                                            changedText.contains(' ')) {
-                                          changes.add(
-                                            new Change<TextEditingValue>(
-                                              lastStoredTitle,
-                                              () => currentTitle.value =
-                                                  _title.value,
-                                              (val) => currentTitle.value = val,
-                                            ),
-                                          );
-                                          lastStoredTitle = _title.value;
-                                        }
-                                      } else if (val.length <
-                                          lastStoredTitle.text.length) {
+                                      if (UndoRules.shouldStore(
+                                          lastStoredTitle.text,
+                                          currentTitle.value.text)) {
                                         changes.add(
                                           new Change<TextEditingValue>(
                                             lastStoredTitle,
@@ -372,45 +389,8 @@ class EditNotePage extends StatelessWidget {
                                     lastStoredTitle = currentTitle.value;
                                   }
                                   currentBody.value = _body.value;
-                                  String changedText = "";
-                                  if (val.length > lastStoredBody.text.length) {
-                                    for (int i = 0;
-                                        i < lastStoredBody.text.length;
-                                        i++) {
-                                      if (val[i] != lastStoredBody.text[i]) {
-                                        changedText += val[i];
-                                        if (i + 1 <
-                                            lastStoredBody.text.length) {
-                                          val = val.substring(0, i) +
-                                              val.substring(i + 1);
-                                        }
-                                      }
-                                    }
-                                    if (changedText.isEmpty) {
-                                      changedText = val.substring(
-                                          lastStoredBody.text.length);
-                                    }
-                                    if (changedText.contains('.') ||
-                                        changedText.contains(',') ||
-                                        changedText.contains('!') ||
-                                        changedText.contains('?') ||
-                                        changedText.contains(':') ||
-                                        changedText.contains(';') ||
-                                        changedText.contains('\"') ||
-                                        changedText.contains('-') ||
-                                        changedText.contains('_') ||
-                                        changedText.contains(' ')) {
-                                      changes.add(
-                                        new Change<TextEditingValue>(
-                                          lastStoredBody,
-                                          () => currentBody.value = _body.value,
-                                          (val) => currentBody.value = val,
-                                        ),
-                                      );
-                                      lastStoredBody = _body.value;
-                                    }
-                                  } else if (val.length <
-                                      lastStoredTitle.text.length) {
+                                  if (UndoRules.shouldStore(lastStoredBody.text,
+                                      currentBody.value.text)) {
                                     changes.add(
                                       new Change<TextEditingValue>(
                                         lastStoredBody,
