@@ -9,7 +9,6 @@ import 'package:notes/views/NotesPage.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:notes/model/note.dart';
 import 'package:desktop_window/desktop_window.dart';
-
 import 'constants.dart';
 
 void main() async {

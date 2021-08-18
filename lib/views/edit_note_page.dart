@@ -358,7 +358,6 @@ class EditNotePage extends StatelessWidget {
                                   TextEditingController();
                               _body.value = curBody;
                               return TextFormField(
-                                autofocus: true,
                                 cursorColor:
                                     Theme.of(context).primaryColor == kGlacier
                                         ? kMatte

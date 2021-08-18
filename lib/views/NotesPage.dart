@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:notes/constants.dart';
 import 'package:hive/hive.dart';
@@ -30,11 +29,6 @@ class _NotesPageState extends State<NotesPage> {
     WidgetsBinding.instance!.window.onPlatformBrightnessChanged = () {
       if (widget.darkMode == 2) widget.box.put('darkMode', 2);
     };
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   Future<void> deleteAll(Box<dynamic> box) async {
