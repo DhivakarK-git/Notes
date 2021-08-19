@@ -307,6 +307,8 @@ class EditNotePage extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.headline4,
                                     textInputAction: TextInputAction.next,
+                                    textCapitalization:
+                                        TextCapitalization.words,
                                     keyboardType: TextInputType.text,
                                     onChanged: (val) {
                                       if (currentBody.value != lastStoredBody) {
