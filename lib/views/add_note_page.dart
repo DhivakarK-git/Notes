@@ -253,6 +253,7 @@ class AddNotePage extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyText1,
                               textInputAction: TextInputAction.newline,
                               keyboardType: TextInputType.multiline,
+                              textCapitalization: TextCapitalization.sentences,
                               onChanged: (val) {
                                 if (currentTitle.value != lastStoredTitle) {
                                   var temp = currentTitle.value;

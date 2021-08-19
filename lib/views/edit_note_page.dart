@@ -372,6 +372,9 @@ class EditNotePage extends StatelessWidget {
                                   hintText: "Note",
                                   hintMaxLines: null,
                                 ),
+                                textCapitalization:
+                                    TextCapitalization.sentences,
+                                autofocus: Platform.isWindows,
                                 style: Theme.of(context).textTheme.bodyText1,
                                 textInputAction: TextInputAction.newline,
                                 keyboardType: TextInputType.multiline,
