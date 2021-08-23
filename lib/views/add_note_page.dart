@@ -173,58 +173,80 @@ class AddNotePage extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(18, 0, 18, 0),
-                      child: ValueListenableBuilder<TextEditingValue>(
-                          valueListenable: currentTitle,
-                          builder:
-                              (context, TextEditingValue curTitle, snapshot) {
-                            TextEditingController _title =
-                                TextEditingController();
-                            _title.value = curTitle;
-                            return TextFormField(
-                              cursorColor:
-                                  Theme.of(context).primaryColor == kGlacier
-                                      ? kMatte
-                                      : kGlacier,
-                              controller: _title,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                hintText: "Title",
-                              ),
-                              style: Theme.of(context).textTheme.headline4,
-                              textInputAction: TextInputAction.next,
-                              textCapitalization: TextCapitalization.words,
-                              keyboardType: TextInputType.text,
-                              onChanged: (val) {
-                                if (currentBody.value != lastStoredBody) {
-                                  var temp = currentBody.value;
-                                  changes.add(
-                                    new Change<TextEditingValue>(
-                                      lastStoredBody,
-                                      () => currentBody.value = temp,
-                                      (val) => currentBody.value = val,
-                                    ),
-                                  );
-                                  lastStoredBody = currentBody.value;
-                                }
-                                currentTitle.value = _title.value;
-                                if (UndoRules.shouldStore(lastStoredTitle.text,
-                                    currentTitle.value.text)) {
-                                  changes.add(
-                                    new Change<TextEditingValue>(
-                                      lastStoredTitle,
-                                      () => currentTitle.value = _title.value,
-                                      (val) => currentTitle.value = val,
-                                    ),
-                                  );
-                                  lastStoredTitle = _title.value;
-                                }
-                              },
-                            );
-                          }),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ValueListenableBuilder<TextEditingValue>(
+                              valueListenable: currentTitle,
+                              builder: (context, TextEditingValue curTitle,
+                                  snapshot) {
+                                TextEditingController _title =
+                                    TextEditingController();
+                                _title.value = curTitle;
+                                return TextFormField(
+                                  cursorColor:
+                                      Theme.of(context).primaryColor == kGlacier
+                                          ? kMatte
+                                          : kGlacier,
+                                  controller: _title,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    errorBorder: InputBorder.none,
+                                    disabledBorder: InputBorder.none,
+                                    hintText: "Title",
+                                  ),
+                                  style: Theme.of(context).textTheme.headline4,
+                                  textInputAction: TextInputAction.next,
+                                  textCapitalization: TextCapitalization.words,
+                                  keyboardType: TextInputType.text,
+                                  onChanged: (val) {
+                                    if (currentBody.value != lastStoredBody) {
+                                      var temp = currentBody.value;
+                                      changes.add(
+                                        new Change<TextEditingValue>(
+                                          lastStoredBody,
+                                          () => currentBody.value = temp,
+                                          (val) => currentBody.value = val,
+                                        ),
+                                      );
+                                      lastStoredBody = currentBody.value;
+                                    }
+                                    currentTitle.value = _title.value;
+                                    if (UndoRules.shouldStore(
+                                        lastStoredTitle.text,
+                                        currentTitle.value.text)) {
+                                      changes.add(
+                                        new Change<TextEditingValue>(
+                                          lastStoredTitle,
+                                          () =>
+                                              currentTitle.value = _title.value,
+                                          (val) => currentTitle.value = val,
+                                        ),
+                                      );
+                                      lastStoredTitle = _title.value;
+                                    }
+                                  },
+                                );
+                              }),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ValueListenableBuilder<TextEditingValue>(
+                                    valueListenable: currentBody,
+                                    builder: (context, TextEditingValue curBody,
+                                        snapshot) {
+                                      return Text(
+                                        "${curBody.text.length} Characters",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2,
+                                      );
+                                    }),
+                              ]),
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 18),
@@ -283,6 +305,9 @@ class AddNotePage extends StatelessWidget {
                               maxLines: null,
                             );
                           }),
+                    ),
+                    SizedBox(
+                      height: 56.0,
                     ),
                   ],
                 ),

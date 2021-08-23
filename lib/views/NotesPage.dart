@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:notes/constants.dart';
 import 'package:hive/hive.dart';
@@ -18,6 +20,7 @@ class NotesPage extends StatefulWidget {
 
 class _NotesPageState extends State<NotesPage> {
   bool search = false;
+  String initial = "";
   ValueNotifier<bool> delete = ValueNotifier(false);
   List<int> deleteValues = [];
   ValueNotifier<int> deleteValuesLength = ValueNotifier(0);
@@ -42,7 +45,7 @@ class _NotesPageState extends State<NotesPage> {
     bool gridview = widget.box.get('gridview', defaultValue: true);
     return SafeArea(
         child: PageTransitionSwitcher(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 314),
       reverse: !search,
       transitionBuilder: (
         Widget child,
@@ -57,11 +60,26 @@ class _NotesPageState extends State<NotesPage> {
         );
       },
       child: search
-          ? NotesSearchPage(widget.box, () {
-              setState(() {
-                search = false;
-              });
-            })
+          ? NotesSearchPage(
+              widget.box,
+              () {
+                setState(() {
+                  search = false;
+                  initial = "";
+                });
+              },
+              initial,
+              (value) {
+                Navigator.of(context).pop();
+                Timer(
+                  Duration(milliseconds: 200),
+                  () => setState(() {
+                    search = true;
+                    initial = value;
+                  }),
+                );
+              },
+            )
           : WillPopScope(
               key: ValueKey("Home"),
               onWillPop: () async {
@@ -638,6 +656,23 @@ class _NotesPageState extends State<NotesPage> {
                                                                       index -
                                                                       1,
                                                                   note,
+                                                                  (value) {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                    Timer(
+                                                                      Duration(
+                                                                          milliseconds:
+                                                                              200),
+                                                                      () => setState(
+                                                                          () {
+                                                                        search =
+                                                                            true;
+                                                                        initial =
+                                                                            value;
+                                                                      }),
+                                                                    );
+                                                                  },
                                                                 ),
                                                               ),
                                                               openColor: Theme.of(
@@ -1025,6 +1060,20 @@ class _NotesPageState extends State<NotesPage> {
                                                                         index -
                                                                         1),
                                                                     note,
+                                                                    (value) {
+                                                                      Timer(
+                                                                        Duration(
+                                                                            milliseconds:
+                                                                                200),
+                                                                        () => setState(
+                                                                            () {
+                                                                          search =
+                                                                              true;
+                                                                          initial =
+                                                                              value;
+                                                                        }),
+                                                                      );
+                                                                    },
                                                                   ),
                                                                 ),
                                                                 openColor: Theme.of(
