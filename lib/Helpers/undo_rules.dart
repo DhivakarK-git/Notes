@@ -7,8 +7,8 @@ class UndoRules {
   static bool shouldStore(String lastStoredValue, String currentValue) {
     String changedText = "";
     if (currentValue.length > lastStoredValue.length) {
-      int concurrency = 0;
-      for (int i = 0; i < lastStoredValue.length; i++) {
+      int concurrency = 0, i = 0;
+      while (i < lastStoredValue.length) {
         if (currentValue[i] != lastStoredValue[i]) {
           if (!(concurrency == 0 || concurrency == i)) break;
           changedText += currentValue[i];
@@ -18,6 +18,7 @@ class UndoRules {
             concurrency = i--;
           }
         }
+        i++;
       }
       if (changedText.isEmpty)
         changedText = currentValue.substring(lastStoredValue.length);
@@ -25,6 +26,7 @@ class UndoRules {
           changedText.contains(' ') ||
           changedText.contains('\n')) return true;
     } else if (currentValue.length < lastStoredValue.length) return true;
+
     return false;
   }
 }

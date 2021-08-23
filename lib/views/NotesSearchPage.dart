@@ -10,14 +10,16 @@ import 'package:animations/animations.dart';
 class NotesSearchPage extends StatefulWidget {
   final Box<dynamic> box;
   final Function refresh;
-  NotesSearchPage(this.box, this.refresh);
+  final String initial;
+  final Function searchback;
+  NotesSearchPage(this.box, this.refresh, this.initial, this.searchback);
 
   @override
   _NotesSearchPageState createState() => _NotesSearchPageState();
 }
 
 class _NotesSearchPageState extends State<NotesSearchPage> {
-  final TextEditingController _filter = new TextEditingController();
+  late final TextEditingController _filter;
   ValueNotifier<String> listShouldChange = ValueNotifier("");
   ValueNotifier<bool> delete = ValueNotifier(false);
   List<int> deleteValues = [];
@@ -26,6 +28,13 @@ class _NotesSearchPageState extends State<NotesSearchPage> {
   int count = 0;
 
   String copyTitle = '', copyBody = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _filter = new TextEditingController(text: widget.initial);
+    listShouldChange.value = widget.initial;
+  }
 
   Future<void> deleteAll() async {
     deleteValues.sort();
@@ -468,6 +477,10 @@ class _NotesSearchPageState extends State<NotesSearchPage> {
                                                             },
                                                             currindex,
                                                             note,
+                                                            (value) {
+                                                              widget.searchback(
+                                                                  value);
+                                                            },
                                                           ),
                                                         ),
                                                         openColor:
