@@ -166,153 +166,158 @@ class AddNotePage extends StatelessWidget {
               ],
             ),
             body: Container(
-                child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Form(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(18, 0, 18, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ValueListenableBuilder<TextEditingValue>(
-                              valueListenable: currentTitle,
-                              builder: (context, TextEditingValue curTitle,
-                                  snapshot) {
-                                TextEditingController _title =
-                                    TextEditingController();
-                                _title.value = curTitle;
-                                return TextFormField(
-                                  cursorColor:
-                                      Theme.of(context).primaryColor == kGlacier
-                                          ? kMatte
-                                          : kGlacier,
-                                  controller: _title,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    disabledBorder: InputBorder.none,
-                                    hintText: "Title",
-                                  ),
-                                  style: Theme.of(context).textTheme.headline4,
-                                  textInputAction: TextInputAction.next,
-                                  textCapitalization: TextCapitalization.words,
-                                  keyboardType: TextInputType.text,
-                                  onChanged: (val) {
-                                    if (currentBody.value != lastStoredBody) {
-                                      var temp = currentBody.value;
-                                      changes.add(
-                                        new Change<TextEditingValue>(
-                                          lastStoredBody,
-                                          () => currentBody.value = temp,
-                                          (val) => currentBody.value = val,
-                                        ),
-                                      );
-                                      lastStoredBody = currentBody.value;
-                                    }
-                                    currentTitle.value = _title.value;
-                                    if (UndoRules.shouldStore(
-                                        lastStoredTitle.text,
-                                        currentTitle.value.text)) {
-                                      changes.add(
-                                        new Change<TextEditingValue>(
-                                          lastStoredTitle,
-                                          () =>
-                                              currentTitle.value = _title.value,
-                                          (val) => currentTitle.value = val,
-                                        ),
-                                      );
-                                      lastStoredTitle = _title.value;
-                                    }
-                                  },
-                                );
-                              }),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                ValueListenableBuilder<TextEditingValue>(
-                                    valueListenable: currentBody,
-                                    builder: (context, TextEditingValue curBody,
-                                        snapshot) {
-                                      return Text(
-                                        "${curBody.text.length} Characters",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText2,
-                                      );
-                                    }),
-                              ]),
-                        ],
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Form(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(18, 0, 18, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ValueListenableBuilder<TextEditingValue>(
+                                valueListenable: currentTitle,
+                                builder: (context, TextEditingValue curTitle,
+                                    snapshot) {
+                                  TextEditingController _title =
+                                      TextEditingController();
+                                  _title.value = curTitle;
+                                  return TextFormField(
+                                    cursorColor:
+                                        Theme.of(context).primaryColor ==
+                                                kGlacier
+                                            ? kMatte
+                                            : kGlacier,
+                                    controller: _title,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      errorBorder: InputBorder.none,
+                                      disabledBorder: InputBorder.none,
+                                      hintText: "Title",
+                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
+                                    textInputAction: TextInputAction.next,
+                                    textCapitalization:
+                                        TextCapitalization.words,
+                                    keyboardType: TextInputType.text,
+                                    onChanged: (val) {
+                                      if (currentBody.value != lastStoredBody) {
+                                        var temp = currentBody.value;
+                                        changes.add(
+                                          new Change<TextEditingValue>(
+                                            lastStoredBody,
+                                            () => currentBody.value = temp,
+                                            (val) => currentBody.value = val,
+                                          ),
+                                        );
+                                        lastStoredBody = currentBody.value;
+                                      }
+                                      currentTitle.value = _title.value;
+                                      if (UndoRules.shouldStore(
+                                          lastStoredTitle.text,
+                                          currentTitle.value.text)) {
+                                        changes.add(
+                                          new Change<TextEditingValue>(
+                                            lastStoredTitle,
+                                            () => currentTitle.value =
+                                                _title.value,
+                                            (val) => currentTitle.value = val,
+                                          ),
+                                        );
+                                        lastStoredTitle = _title.value;
+                                      }
+                                    },
+                                  );
+                                }),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  ValueListenableBuilder<TextEditingValue>(
+                                      valueListenable: currentBody,
+                                      builder: (context,
+                                          TextEditingValue curBody, snapshot) {
+                                        return Text(
+                                          "${curBody.text.length} Characters",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText2,
+                                        );
+                                      }),
+                                ]),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 18),
-                      child: ValueListenableBuilder<TextEditingValue>(
-                          valueListenable: currentBody,
-                          builder:
-                              (context, TextEditingValue curBody, snapshot) {
-                            TextEditingController _body =
-                                TextEditingController();
-                            _body.value = curBody;
-                            return TextFormField(
-                              autofocus: true,
-                              cursorColor:
-                                  Theme.of(context).primaryColor == kGlacier
-                                      ? kMatte
-                                      : kGlacier,
-                              controller: _body,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                hintText: "Note",
-                                hintMaxLines: null,
-                              ),
-                              style: Theme.of(context).textTheme.bodyText1,
-                              textInputAction: TextInputAction.newline,
-                              keyboardType: TextInputType.multiline,
-                              textCapitalization: TextCapitalization.sentences,
-                              onChanged: (val) {
-                                if (currentTitle.value != lastStoredTitle) {
-                                  var temp = currentTitle.value;
-                                  changes.add(
-                                    new Change<TextEditingValue>(
-                                      lastStoredTitle,
-                                      () => currentTitle.value = temp,
-                                      (val) => currentTitle.value = val,
-                                    ),
-                                  );
-                                  lastStoredTitle = currentTitle.value;
-                                }
-                                currentBody.value = _body.value;
-                                if (UndoRules.shouldStore(lastStoredBody.text,
-                                    currentBody.value.text)) {
-                                  changes.add(
-                                    new Change<TextEditingValue>(
-                                      lastStoredBody,
-                                      () => currentBody.value = _body.value,
-                                      (val) => currentBody.value = val,
-                                    ),
-                                  );
-                                  lastStoredBody = _body.value;
-                                }
-                              },
-                              maxLines: null,
-                            );
-                          }),
-                    ),
-                    SizedBox(
-                      height: 56.0,
-                    ),
-                  ],
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 18),
+                        child: ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: currentBody,
+                            builder:
+                                (context, TextEditingValue curBody, snapshot) {
+                              TextEditingController _body =
+                                  TextEditingController();
+                              _body.value = curBody;
+                              return TextFormField(
+                                autofocus: true,
+                                cursorColor:
+                                    Theme.of(context).primaryColor == kGlacier
+                                        ? kMatte
+                                        : kGlacier,
+                                controller: _body,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  hintText: "Note",
+                                  hintMaxLines: null,
+                                ),
+                                style: Theme.of(context).textTheme.bodyText1,
+                                textInputAction: TextInputAction.newline,
+                                keyboardType: TextInputType.multiline,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
+                                onChanged: (val) {
+                                  if (currentTitle.value != lastStoredTitle) {
+                                    var temp = currentTitle.value;
+                                    changes.add(
+                                      new Change<TextEditingValue>(
+                                        lastStoredTitle,
+                                        () => currentTitle.value = temp,
+                                        (val) => currentTitle.value = val,
+                                      ),
+                                    );
+                                    lastStoredTitle = currentTitle.value;
+                                  }
+                                  currentBody.value = _body.value;
+                                  if (UndoRules.shouldStore(lastStoredBody.text,
+                                      currentBody.value.text)) {
+                                    changes.add(
+                                      new Change<TextEditingValue>(
+                                        lastStoredBody,
+                                        () => currentBody.value = _body.value,
+                                        (val) => currentBody.value = val,
+                                      ),
+                                    );
+                                    lastStoredBody = _body.value;
+                                  }
+                                },
+                                maxLines: null,
+                              );
+                            }),
+                      ),
+                      SizedBox(
+                        height: 56.0,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            )),
+            ),
           ),
         ),
       ),

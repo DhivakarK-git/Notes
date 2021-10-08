@@ -66,6 +66,9 @@ class NotesApp extends StatelessWidget {
               scaffoldBackgroundColor: kGlacier,
               cardColor: kFrost,
               primaryIconTheme: IconThemeData(color: kMatte),
+              appBarTheme: AppBarTheme(
+                color: kGlacier,
+              ),
               snackBarTheme: SnackBarThemeData(
                 backgroundColor: kFrost,
                 behavior: SnackBarBehavior.floating,
@@ -155,6 +158,9 @@ class NotesApp extends StatelessWidget {
               visualDensity: VisualDensity.adaptivePlatformDensity,
               scaffoldBackgroundColor: kMatte,
               cardColor: kShadow,
+              appBarTheme: AppBarTheme(
+                color: kMatte,
+              ),
               snackBarTheme: SnackBarThemeData(
                 backgroundColor: kShadow,
                 behavior: SnackBarBehavior.floating,
