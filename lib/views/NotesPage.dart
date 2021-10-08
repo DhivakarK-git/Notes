@@ -213,6 +213,9 @@ class _NotesPageState extends State<NotesPage> {
                                             ),
                                             child: Icon(
                                               Icons.search_outlined,
+                                              color: Theme.of(context)
+                                                  .iconTheme
+                                                  .color,
                                             ),
                                           ),
                                         ),
@@ -253,6 +256,9 @@ class _NotesPageState extends State<NotesPage> {
                                               !gridview
                                                   ? Icons.grid_view_outlined
                                                   : Icons.view_agenda_outlined,
+                                              color: Theme.of(context)
+                                                  .iconTheme
+                                                  .color,
                                             ),
                                           ),
                                         ),
@@ -298,6 +304,9 @@ class _NotesPageState extends State<NotesPage> {
                                                       ? Icons.dark_mode_outlined
                                                       : Icons
                                                           .light_mode_outlined),
+                                              color: Theme.of(context)
+                                                  .iconTheme
+                                                  .color,
                                             ),
                                           ),
                                         ),
@@ -404,7 +413,11 @@ class _NotesPageState extends State<NotesPage> {
                                                   (context, int len, snapshot) {
                                                 return GridView.builder(
                                                   padding: EdgeInsets.fromLTRB(
-                                                      16, 0, 16, 16),
+                                                    16,
+                                                    0,
+                                                    16,
+                                                    16,
+                                                  ),
                                                   itemCount: notesBox.length,
                                                   physics:
                                                       BouncingScrollPhysics(),
