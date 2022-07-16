@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
-
 class TestTextSelectionScroll extends StatefulWidget {
   @override
   _TestTextSelectionScrollState createState() =>

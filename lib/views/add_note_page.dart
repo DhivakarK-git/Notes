@@ -77,6 +77,7 @@ class AddNotePage extends StatelessWidget {
                       () async => await save(context));
                 } else
                   await save(context);
+                return null;
               },
             ),
             UndoIntent: CallbackAction<UndoIntent>(

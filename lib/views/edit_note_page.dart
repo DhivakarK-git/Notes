@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -51,7 +51,7 @@ class _DesktopTextSelectionControls extends TextSelectionControls {
     Offset selectionMidpoint,
     List<TextSelectionPoint> endpoints,
     TextSelectionDelegate delegate,
-    ClipboardStatusNotifier clipboardStatus,
+    ClipboardStatusNotifier? clipboardStatus,
     Offset? lastSecondaryTapDownPosition,
   ) {
     return _DesktopTextSelectionControlsToolbar(
@@ -420,7 +420,7 @@ class OpenTextSelectionControls extends MaterialTextSelectionControls {
     Offset selectionMidpoint,
     List<TextSelectionPoint> endpoints,
     TextSelectionDelegate delegate,
-    ClipboardStatusNotifier clipboardStatus,
+    ClipboardStatusNotifier? clipboardStatus,
     Offset? lastSecondaryTapDownPosition,
   ) {
     return OpenTextSelectionControlsToolbar(
@@ -429,7 +429,7 @@ class OpenTextSelectionControls extends MaterialTextSelectionControls {
       selectionMidpoint: selectionMidpoint,
       endpoints: endpoints,
       delegate: delegate,
-      clipboardStatus: clipboardStatus,
+      clipboardStatus: clipboardStatus!,
       handleCut: canCut(delegate) ? () => handleCut(delegate) : null,
       handleCopy: canCopy(delegate)
           ? () => handleCopy(delegate, clipboardStatus)
@@ -987,6 +987,7 @@ class EditNotePage extends StatelessWidget {
                     }
                   }
                 }
+                return null;
               },
             ),
           },
@@ -1253,7 +1254,7 @@ class EditNotePage extends StatelessWidget {
                             builder:
                                 (context, TextEditingValue curBody, snapshot) {
                               RichTextController _body = RichTextController(
-                                patternMap: {
+                                patternMatchMap: {
                                   hashtags: TextStyle(
                                     color: Colors.cyan[300],
                                   ),
@@ -1268,10 +1269,9 @@ class EditNotePage extends StatelessWidget {
                                     color: Colors.cyan[300],
                                   ),
                                 },
+                                onMatch: (List<String> match) {},
                               );
                               _body.value = curBody;
-
-                              bool enabled = false;
 
                               return TextFormField(
                                 cursorColor:

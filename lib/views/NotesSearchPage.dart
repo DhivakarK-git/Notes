@@ -83,7 +83,7 @@ class _NotesSearchPageState extends State<NotesSearchPage> {
                               builder:
                                   (context, int deleteValuesLength, snapshot) {
                                 return Text(
-                                  "${deleteValuesLength} Selected",
+                                  "$deleteValuesLength Selected",
                                   style: Theme.of(context).textTheme.headline6,
                                 );
                               }),

@@ -1,9 +1,8 @@
-import 'dart:io';
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:notes/constants.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:notes/views/NotesPage.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -40,7 +39,7 @@ class NotesApp extends StatelessWidget {
                   ? 2
                   : box.get('darkMode', defaultValue: 2);
           var barColor = darkMode == 2
-              ? (WidgetsBinding.instance!.window.platformBrightness ==
+              ? (WidgetsBinding.instance.window.platformBrightness ==
                       Brightness.dark
                   ? kMatte
                   : kGlacier)

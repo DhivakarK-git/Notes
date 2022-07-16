@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:async' show Future, Timer;
 
 import 'package:flutter/material.dart';
 import 'package:notes/constants.dart';
@@ -29,7 +29,7 @@ class _NotesPageState extends State<NotesPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.window.onPlatformBrightnessChanged = () {
+    WidgetsBinding.instance.window.onPlatformBrightnessChanged = () {
       if (widget.darkMode == 2) widget.box.put('darkMode', 2);
     };
   }
@@ -114,7 +114,7 @@ class _NotesPageState extends State<NotesPage> {
                                       builder: (context, int deleteValuesLength,
                                           snapshot) {
                                         return Text(
-                                          "${deleteValuesLength} Selected",
+                                          "$deleteValuesLength Selected",
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6,
