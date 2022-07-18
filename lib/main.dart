@@ -38,22 +38,6 @@ class NotesApp extends StatelessWidget {
               box.get('darkMode', defaultValue: 2).runtimeType == bool
                   ? 2
                   : box.get('darkMode', defaultValue: 2);
-          var barColor = darkMode == 2
-              ? (WidgetsBinding.instance.window.platformBrightness ==
-                      Brightness.dark
-                  ? kMatte
-                  : kGlacier)
-              : (darkMode == 1 ? kMatte : kGlacier);
-          var iconBrightness =
-              barColor == kMatte ? Brightness.light : Brightness.dark;
-          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-            systemNavigationBarColor: barColor,
-            systemNavigationBarIconBrightness: iconBrightness,
-            statusBarColor: barColor,
-            statusBarBrightness:
-                barColor == kMatte ? Brightness.dark : Brightness.light,
-            statusBarIconBrightness: iconBrightness,
-          ));
           return MaterialApp(
             title: 'Notes',
             themeMode: darkMode == 2
@@ -65,9 +49,14 @@ class NotesApp extends StatelessWidget {
               scaffoldBackgroundColor: kGlacier,
               cardColor: kFrost,
               primaryIconTheme: IconThemeData(color: kMatte),
-              appBarTheme: AppBarTheme(
-                color: kGlacier,
-              ),
+              brightness: Brightness.light,
+              appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                    color: kGlacier,
+                    systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
+                        statusBarColor: kGlacier,
+                        statusBarIconBrightness: Brightness.dark,
+                        systemNavigationBarColor: kGlacier),
+                  ),
               snackBarTheme: SnackBarThemeData(
                 backgroundColor: kFrost,
                 behavior: SnackBarBehavior.floating,
@@ -157,9 +146,13 @@ class NotesApp extends StatelessWidget {
               visualDensity: VisualDensity.adaptivePlatformDensity,
               scaffoldBackgroundColor: kMatte,
               cardColor: kShadow,
-              appBarTheme: AppBarTheme(
-                color: kMatte,
-              ),
+              appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                    color: kMatte,
+                    systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
+                        statusBarColor: kMatte,
+                        statusBarIconBrightness: Brightness.light,
+                        systemNavigationBarColor: kMatte),
+                  ),
               snackBarTheme: SnackBarThemeData(
                 backgroundColor: kShadow,
                 behavior: SnackBarBehavior.floating,
