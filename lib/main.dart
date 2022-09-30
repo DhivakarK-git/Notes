@@ -1,216 +1,113 @@
-import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:notes/constants.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:notes/views/NotesPage.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:notes/model/note.dart';
-import 'package:desktop_window/desktop_window.dart';
-import 'constants.dart';
+import 'package:notes/isar/isarService.dart';
+import 'package:notes/models/Note.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
-  Hive.init(appDocumentDir.path);
-  Hive.registerAdapter(
-    NoteAdapter(),
-  );
-  await Hive.openBox('darkModeBox');
-  runApp(NotesApp());
+void main() {
+  runApp(const MyApp());
 }
 
-class NotesApp extends StatelessWidget {
-  void setSize() async {
-    await DesktopWindow.setMinWindowSize(Size(500, 500));
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        // This is the theme of your application.
+        //
+        // Try running your application with "flutter run". You'll see the
+        // application has a blue toolbar. Then, without quitting the app, try
+        // changing the primarySwatch below to Colors.green and then invoke
+        // "hot reload" (press "r" in the console where you ran "flutter run",
+        // or simply save your changes to "hot reload" in a Flutter IDE).
+        // Notice that the counter didn't reset back to zero; the application
+        // is not restarted.
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
   }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  String value = "";
+
+  final service = IsarService();
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isWindows) {
-      setSize();
-    }
-    return ValueListenableBuilder<Box<dynamic>>(
-        valueListenable: Hive.box('darkModeBox').listenable(),
-        builder: (context, box, widget) {
-          int darkMode =
-              box.get('darkMode', defaultValue: 2).runtimeType == bool
-                  ? 2
-                  : box.get('darkMode', defaultValue: 2);
-          return MaterialApp(
-            title: 'Notes',
-            themeMode: darkMode == 2
-                ? ThemeMode.system
-                : (darkMode == 1 ? ThemeMode.dark : ThemeMode.light),
-            theme: ThemeData.light().copyWith(
-              primaryColor: kGlacier,
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-              scaffoldBackgroundColor: kGlacier,
-              cardColor: kFrost,
-              primaryIconTheme: IconThemeData(color: kMatte),
-              brightness: Brightness.light,
-              appBarTheme: Theme.of(context).appBarTheme.copyWith(
-                    color: kGlacier,
-                    systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
-                        statusBarColor: kGlacier,
-                        statusBarIconBrightness: Brightness.dark,
-                        systemNavigationBarColor: kGlacier),
-                  ),
-              snackBarTheme: SnackBarThemeData(
-                backgroundColor: kFrost,
-                behavior: SnackBarBehavior.floating,
-              ),
-              textTheme: TextTheme(
-                headline1: GoogleFonts.poppins(
-                  fontSize: 93,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: -1.5,
-                  color: kMatte,
-                ),
-                headline2: GoogleFonts.poppins(
-                  fontSize: 58,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: -0.5,
-                  color: kMatte,
-                ),
-                headline3: GoogleFonts.poppins(
-                  fontSize: 46,
-                  fontWeight: FontWeight.w400,
-                  color: kMatte,
-                ),
-                headline4: GoogleFonts.poppins(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.25,
-                  color: kMatte,
-                ),
-                headline5: GoogleFonts.poppins(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.25,
-                  color: kMatte,
-                ),
-                headline6: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.15,
-                  color: kMatte,
-                ),
-                subtitle1: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.15,
-                  color: kMatte,
-                ),
-                subtitle2: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.1,
-                  color: kMatte,
-                ),
-                bodyText1: GoogleFonts.openSans(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.5,
-                  color: kMatte,
-                ),
-                bodyText2: GoogleFonts.openSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.25,
-                  color: kMatte,
-                ),
-                button: GoogleFonts.openSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 1.25,
-                  color: kMatte,
-                ),
-                caption: GoogleFonts.openSans(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.4,
-                  color: kMatte,
-                ),
-                overline: GoogleFonts.openSans(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 1.5,
-                  color: kMatte,
-                ),
-              ),
-            ),
-            darkTheme: ThemeData.dark().copyWith(
-              primaryColor: kMatte,
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-              scaffoldBackgroundColor: kMatte,
-              cardColor: kShadow,
-              appBarTheme: Theme.of(context).appBarTheme.copyWith(
-                    color: kMatte,
-                    systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
-                        statusBarColor: kMatte,
-                        statusBarIconBrightness: Brightness.light,
-                        systemNavigationBarColor: kMatte),
-                  ),
-              snackBarTheme: SnackBarThemeData(
-                backgroundColor: kShadow,
-                behavior: SnackBarBehavior.floating,
-              ),
-              textTheme: TextTheme(
-                headline1: GoogleFonts.poppins(
-                    fontSize: 93,
-                    fontWeight: FontWeight.w300,
-                    letterSpacing: -1.5),
-                headline2: GoogleFonts.poppins(
-                    fontSize: 58,
-                    fontWeight: FontWeight.w300,
-                    letterSpacing: -0.5),
-                headline3: GoogleFonts.poppins(
-                    fontSize: 46, fontWeight: FontWeight.w400),
-                headline4: GoogleFonts.poppins(
-                    fontSize: 33,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.25),
-                headline5: GoogleFonts.poppins(
-                    fontSize: 23, fontWeight: FontWeight.w400),
-                headline6: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.15),
-                subtitle1: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.15),
-                subtitle2: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.1),
-                bodyText1: GoogleFonts.openSans(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.5),
-                bodyText2: GoogleFonts.openSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.25),
-                button: GoogleFonts.openSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 1.25),
-                caption: GoogleFonts.openSans(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.4),
-                overline: GoogleFonts.openSans(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 1.5),
-              ),
-            ),
-            debugShowCheckedModeBanner: false,
-            home: NotesPage(darkMode, box),
-          );
-        });
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
+    return Scaffold(
+      appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
+      ),
+      body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        child: Column(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Invoke "debug painting" (press "p" in the console, choose the
+          // "Toggle Debug Paint" action from the Flutter Inspector in Android
+          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+          // to see the wireframe for each widget.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              onChanged: (text) {
+                value = text;
+              },
+            )
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Note newn = Note()
+            ..title = value
+            ..body = value
+            ..color = value
+            ..modified = [DateTime.now()];
+          service.saveCourse(newn);
+        },
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
   }
 }
